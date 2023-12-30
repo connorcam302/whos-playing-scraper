@@ -11,9 +11,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "drizzle-orm": "^0.29.2",
+    "postgres": "^3.4.3",
     "puppeteer": "^21.6.1"
   },
   "devDependencies": {
+    "drizzle-kit": "^0.20.9",
     "prettier": "3.1.1"
   }
 }

@@ -18,7 +18,7 @@ import { heroes } from './laneRates.js'
  * getHeroRolesWithFarm('Enigma', teamData) // Output: '3' (Offlane)
  */
 
-function getHeroRolesWithFarm(heroName, team) {
+export const getHeroRolesWithFarm = (heroName, team) => {
     const heroNames = Object.keys(team)
     const roles = ['1', '2', '3', '4', '5'];
     const heroRoles = [];
@@ -49,13 +49,6 @@ function getHeroRolesWithFarm(heroName, team) {
             heroRoles.push({ name: undefined, role: role });
         }
     });
+
     return heroRoles.find(hero => hero.name === heroName).role;
 }
-
-// Example usage:
-const teamData = {
-    'Warlock': 321, 'Troll Warlord': 570, 'Doom': 465, 'Enigma': 297, 'Zeus': 419
-};
-
-const result = getHeroRolesWithFarm('Enigma', teamData);
-console.log(result);
