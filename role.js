@@ -1,7 +1,13 @@
 import { heroes } from './laneRates.js'
 
-function getHeroRolesWithFarm(heroNames, lastHits) {
-    const roles = ['Carry', 'Mid', 'Offlane', 'Soft Support', 'Hard Support'];
+
+/* Returns the role of a hero based on the team composition and farm distribution
+* @param {string} heroName - The name of the hero to get the role for
+*/
+
+function getHeroRolesWithFarm(heroName, team) {
+    const heroNames = Object.keys(team)
+    const roles = ['1', '2', '3', '4', '5'];
     const heroRoles = [];
 
     roles.forEach(role => {
@@ -10,8 +16,8 @@ function getHeroRolesWithFarm(heroNames, lastHits) {
             .sort((a, b) => {
                 const percentageA = parseFloat(a.data[roles.indexOf(role)].replace('%', ''));
                 const percentageB = parseFloat(b.data[roles.indexOf(role)].replace('%', ''));
-                const lastHitsA = lastHits[a.name] || 0;
-                const lastHitsB = lastHits[b.name] || 0;
+                const lastHitsA = team[a.name] || 0;
+                const lastHitsB = team[b.name] || 0;
 
                 // Weighted average calculation
                 const weightedAverageA = (percentageA * 0.85) + (lastHitsA * 0.15);
@@ -30,15 +36,13 @@ function getHeroRolesWithFarm(heroNames, lastHits) {
             heroRoles.push({ name: undefined, role: role });
         }
     });
-
-    return heroRoles;
+    return heroRoles.find(hero => hero.name === heroName).role;
 }
 
 // Example usage:
-const selectedHeroNames = ['Warlock', 'Troll Warlord', 'Doom', 'Enigma', 'Zeus'];
-const lastHits = {
+const teamData = {
     'Warlock': 321, 'Troll Warlord': 570, 'Doom': 465, 'Enigma': 297, 'Zeus': 419
 };
 
-const result = getHeroRolesWithFarm(selectedHeroNames, lastHits);
+const result = getHeroRolesWithFarm('Enigma', teamData);
 console.log(result);

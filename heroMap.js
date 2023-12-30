@@ -623,4 +623,4 @@ heroMap.set(138, {
 
 const heroIdArray = Array.from(heroMap.keys());
 
-export { heroMap, heroIdArray }
+export { heroMap, heroIdArray };
