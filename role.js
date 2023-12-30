@@ -1,9 +1,22 @@
 import { heroes } from './laneRates.js'
 
-
-/* Returns the role of a hero based on the team composition and farm distribution
-* @param {string} heroName - The name of the hero to get the role for
-*/
+/*
+ * Gets the role of a specific hero based on the hero's name and team data.
+ *
+ * @param {string} heroName - The name of the hero.
+ * @param {Object.<string, number>} team - Team data containing hero names as keys and last hits as values.
+ * @returns {string} - The role of the specified hero. If the hero is not found, returns 'Unknown'.
+ *
+ * @example
+ * const teamData = {
+ *   'Warlock': 321,
+ *   'Troll Warlord': 570,
+ *   'Doom': 465,
+ *   'Enigma': 297,
+ *   'Zeus': 419
+ * };
+ * getHeroRolesWithFarm('Enigma', teamData) // Output: '3' (Offlane)
+ */
 
 function getHeroRolesWithFarm(heroName, team) {
     const heroNames = Object.keys(team)
