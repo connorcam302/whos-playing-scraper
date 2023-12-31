@@ -1,4 +1,19 @@
-import { heroes } from './laneRates.js'
+import fs from 'fs/promises';
+
+async function readJsonArrayFromFile() {
+    try {
+        // Read the content of the file asynchronously
+        const fileContent = await fs.readFile('./webscraper/laneRates.json', 'utf-8');
+
+        // Parse the JSON array string to a JavaScript array
+        console.log(fileContent)
+        return JSON.parse(fileContent);
+
+        // Now 'jsArray' is a JavaScript array
+    } catch (error) {
+        console.error('Error reading or parsing the file:', error);
+    }
+}
 
 /*
  * Gets the role of a specific hero based on the hero's name and team data.
@@ -18,7 +33,8 @@ import { heroes } from './laneRates.js'
  * getHeroRolesWithFarm('Enigma', teamData) // Output: '3' (Offlane)
  */
 
-export const getHeroRolesWithFarm = (heroName, team) => {
+export const getHeroRolesWithFarm = async (heroName, team) => {
+    const heroes = await readJsonArrayFromFile();
     const heroNames = Object.keys(team)
     const roles = ['1', '2', '3', '4', '5'];
     const heroRoles = [];
