@@ -65,6 +65,6 @@ export const getHeroRolesWithFarm = async (heroName, team) => {
             heroRoles.push({ name: undefined, role: role });
         }
     });
-
+    console.log(heroRoles)
     return heroRoles.find(hero => hero.name === heroName).role;
 }

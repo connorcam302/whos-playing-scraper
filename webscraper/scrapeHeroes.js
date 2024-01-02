@@ -10,7 +10,7 @@ const getHeroData = async (heroId) => {
 
     const page = await browser.newPage();
 
-    await page.goto("https://stratz.com/heroes/" + heroId, {
+    await page.goto(`https://stratz.com/heroes/${heroId}?rankBracketHeroTimeDetail=DIVINE_IMMORTAL`, {
         waitUntil: "networkidle0",
     });
 
