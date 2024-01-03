@@ -25,6 +25,7 @@ export const accounts = pgTable('accounts', {
 	owner: bigint('owner', { mode: 'number' })
 		.notNull()
 		.references(() => players.id),
+
 	accountId: bigint('account_id', { mode: 'number' }).primaryKey().notNull(),
 	smurf: boolean('smurf').notNull(),
 })
@@ -46,7 +47,7 @@ export const matchData = pgTable(
 	{
 		playerId: bigint('player_id', { mode: 'number' })
 			.notNull()
-			.references(() => players.id),
+			.references(() => accounts.accountId),
 		matchId: bigint('match_id', { mode: 'number' })
 			.notNull()
 			.references(() => matches.id),
@@ -75,15 +76,14 @@ export const matchData = pgTable(
 		item5: bigint('item_5', { mode: 'number' })
 			.notNull()
 			.references(() => items.id),
-		partySize: bigint('party_size', { mode: 'number' }),
 		aghanimsScepter: bigint('aghanims_scepter', { mode: 'number' }),
 		aghanimsShard: bigint('aghanims_shard', { mode: 'number' }),
 		goldPerMin: bigint('gold_per_min', { mode: 'number' }),
 		lastHits: bigint('last_hits', { mode: 'number' }),
 		xpPerMin: bigint('xp_per_min', { mode: 'number' }),
 		itemNeutral: bigint('item_neutral', { mode: 'number' }).references(() => items.id),
-		role: bigint('role', { mode: 'number' }),
-		impact: bigint('impact', { mode: 'number' }),
+		role: bigint('role', { mode: 'number' }).notNull(),
+		impact: bigint('impact', { mode: 'number' }).notNull(),
 	},
 	table => {
 		return {

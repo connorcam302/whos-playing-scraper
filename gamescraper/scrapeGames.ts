@@ -3,20 +3,28 @@ import { getMatchDetails, getMatchHistory, getAccountList } from './connector'
 import { db } from './db/database'
 import { matchData, matches, players } from './db/schema'
 import { getRole } from './role'
+import { getImpactScore } from './impact'
+import dayjs from 'dayjs'
 
-const debug = true
+const debug = false
 const debugLog = (message: any) => {
 	if (debug) {
 		console.log(message)
 	}
 }
 
+const log = (message: any) => {
+	const date = new Date()
+	console.log(`${dayjs.unix(date.valueOf())}: ${message}`)
+}
+
 const main = async () => {
 	const accountList: number[] = await getAccountList()
 
 	for (const accountId of accountList) {
-		const matchIds = await getMatchHistory(accountId)
+		const matchIds = await getMatchHistory(accountId, 100)
 
+		log(`Processing account: ${accountId}`)
 		for (const matchId of matchIds) {
 			const { result } = await getMatchDetails(matchId)
 
@@ -46,7 +54,7 @@ const main = async () => {
 			})
 			const role = await getRole(playerData.hero_id, teamData)
 			try {
-				const resposne = await db
+				const response = await db
 					.insert(matchData)
 					.values({
 						playerId: accountId,
@@ -69,11 +77,9 @@ const main = async () => {
 						xpPerMin: playerData.xp_per_min,
 						itemNeutral: playerData.item_neutral,
 						role: role,
-						impact: 999,
+						impact: getImpactScore(playerData, role, result.duration),
 					})
 					.returning()
-
-				debugLog(resposne)
 
 				debugLog('Inserted match data: match=' + result.match_id + ' account=' + accountId)
 			} catch (e: any) {
@@ -84,6 +90,7 @@ const main = async () => {
 				}
 			}
 		}
+		log(`Finished processing account: ${accountId}`)
 	}
 
 	process.exit()
