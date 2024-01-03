@@ -44,3 +44,5 @@ const getDataForHeroes = async () => {
 
 // Call the function to start the process
 getDataForHeroes();
+
+
