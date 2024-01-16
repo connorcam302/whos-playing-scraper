@@ -27,8 +27,8 @@ export const getImpactScore = (match, role, duration) => {
 			csMinRating = csMin ** 1.3 / 18
 		}
 		const deathRating = 4 / (24 * deathsPerMin + 1)
-		const kapmRating = ((match.kills * 2 + match.assists * 1) / (duration / 60)) ** 2
-		impact = kapmRating * 0.55 + deathRating * 0.25 + csMinRating * 0.1
+		const kapmRating = ((match.kills * 1.7 + match.assists * 1.3) / (duration / 60)) ** 2
+		impact = kapmRating * 0.6 + deathRating * 0.2 + csMinRating * 0.1
 
 		// Offlane
 	} else if (role === 3) {
@@ -36,21 +36,17 @@ export const getImpactScore = (match, role, duration) => {
 		const deathRating = 4.5 / (23 * deathsPerMin + 1)
 		let kapmRating: number
 		// Lower returns on kills for Axe
-		if ([2].includes(match.hero_id)) {
-			kapmRating = ((match.kills * 1 + match.assists * 1.75) / (duration / 60)) ** 2
-		} else {
-			kapmRating = ((match.kills * 0.75 + match.assists * 2) / (duration / 60)) ** 2
-		}
-		impact = kapmRating * 0.6 + deathRating * 0.3 + csMinRating * 0.1
+		kapmRating = ((match.kills * 1.5 + match.assists * 1.5) / (duration / 60)) ** 2
+		impact = kapmRating * 0.65 + deathRating * 0.3 + csMinRating * 0.05
 
 		// Support
 	} else if (role === 4 || role === 5) {
-		const deathRating = 8 / (33 * deathsPerMin + 1)
-		const kapmRating = ((match.kills * 0.5 + match.assists * 1.35) / (duration / 60)) ** 2
+		const deathRating = 5 / (24 * deathsPerMin + 1)
+		const kapmRating = ((match.kills * 0.65 + match.assists * 1.35) / (duration / 60)) ** 2
 		if ([20, 105].includes(match.hero_id)) {
 			impact = kapmRating * 0.7 + deathRating * 0.3
 		} else {
-			impact = kapmRating * 0.6 + deathRating * 0.4
+			impact = kapmRating * 0.55 + deathRating * 0.45
 		}
 	} else {
 		return 0

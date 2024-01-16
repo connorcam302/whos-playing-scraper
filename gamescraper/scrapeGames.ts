@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { getMatchDetails, getMatchHistory, getAccountList } from './connector'
-import { db } from './db/database'
-import { matchData, matches, players } from './db/schema'
+import { db } from '../db/database'
+import { matchData, matches, players } from '../db/schema'
 import { getRole } from './role'
 import { getImpactScore } from './impact'
 import dayjs from 'dayjs'
@@ -15,14 +15,14 @@ const debugLog = (message: any) => {
 
 const log = (message: any) => {
 	const date = new Date()
-	console.log(`${dayjs.unix(date.valueOf())}: ${message}`)
+	console.log(`${dayjs()}: ${message}`)
 }
 
 const main = async () => {
 	const accountList: number[] = await getAccountList()
 
 	for (const accountId of accountList) {
-		const matchIds = await getMatchHistory(accountId, 100)
+		const matchIds = await getMatchHistory(accountId, 5)
 
 		log(`Processing account: ${accountId}`)
 		for (const matchId of matchIds) {
@@ -70,6 +70,9 @@ const main = async () => {
 						item3: playerData.item_3,
 						item4: playerData.item_4,
 						item5: playerData.item_5,
+						backpack0: playerData.backpack_0,
+						backpack1: playerData.backpack_1,
+						backpack2: playerData.backpack_2,
 						aghanimsScepter: playerData.aghanims_scepter,
 						aghanimsShard: playerData.aghanims_shard,
 						goldPerMin: playerData.gold_per_min,
