@@ -31,7 +31,6 @@ const getPOTW = async (ignoredRoles: number[], ignoredPlayers: string[] = ['none
                 avg_impact DESC
             LIMIT 1;`),
 	)
-	console.log(potw)
 
 	return {
 		username: (potw[0] as any).username,
@@ -67,12 +66,10 @@ const scrapeTOTW = async () => {
 		fivePlayer: totw.find(p => p.role === 5)?.playerId,
 	}
 
-	console.log(data)
-
 	//@ts-ignore
-	const result = db.insert(teamOfTheWeek).values(data).returning()
+	await db.insert(teamOfTheWeek).values(data)
 
-	console.log(await result)
+	process.exit()
 }
 
 scrapeTOTW()
