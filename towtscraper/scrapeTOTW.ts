@@ -9,8 +9,7 @@ const getPOTW = async (ignoredRoles: number[], ignoredPlayers: string[] = ['none
                 players.id as playerid,
                 heroes.name,
                 heroes.id as heroid,
-                match_data.role,
-                AVG(match_data.impact) AS avg_impact
+                match_data.role
             FROM
                 match_data
                 INNER JOIN accounts ON accounts.account_id = match_data.player_id
@@ -21,14 +20,8 @@ const getPOTW = async (ignoredRoles: number[], ignoredPlayers: string[] = ['none
                 matches.start_time > ${Math.floor(Date.now() / 1000) - 604800}
                 AND match_data.role NOT IN (${ignoredRoles.join(', ')}) 
                 AND players.username NOT IN ('${ignoredPlayers.join("', '")}') 
-            GROUP BY
-                match_data.role,
-                players.username,
-                players.id,
-                heroes.name,
-                heroes.id
             ORDER BY
-                avg_impact DESC
+                match_data.impact DESC
             LIMIT 1;`),
 	)
 
