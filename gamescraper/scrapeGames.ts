@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { getMatchDetails, getMatchHistory, getAccountList } from './connector'
+import { getMatchDetails, getMatchHistory, getAccountList, getMatchHistoryOpenDota } from './connector'
 import { db } from '../db/database'
 import { matchData, matches, players } from '../db/schema'
 import { getRole } from './role'
@@ -22,9 +22,11 @@ const main = async () => {
 	const accountList: number[] = await getAccountList()
 
 	for (const accountId of accountList) {
-		const matchIds = await getMatchHistory(accountId, Number(process.argv[2]) || 1)
+		//const matchIds = await getMatchHistory(accountId, Number(process.argv[2]) || 1)
+		const matchIds = await getMatchHistoryOpenDota(accountId, Number(process.argv[2]) || 1)
 
 		log(`Processing account: ${accountId}`)
+		log(`Match Count: ${matchIds.length ? matchIds.length : 'No matches found'}`)
 		for (const matchId of matchIds) {
 			const { result } = await getMatchDetails(matchId)
 

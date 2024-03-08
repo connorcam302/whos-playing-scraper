@@ -27,3 +27,13 @@ export const getAccountList = async () => {
 
 	return idList
 }
+
+export const getMatchHistoryOpenDota = async (accountId: number, numberOfGames: number = 1) => {
+	const matchHistory = await axios.get(
+		`https://api.opendota.com/api/players/${accountId}/matches?limit=${numberOfGames}`,
+	)
+
+	const idList = matchHistory.data.map((match: any) => match.match_id)
+
+	return await idList
+}
