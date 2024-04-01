@@ -123,7 +123,7 @@ export const matchData = pgTable(
 		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		xpPerMin: bigint('xp_per_min', { mode: 'number' }),
 		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
-		itemzinc: bigint('item_neutral', { mode: 'number' }).references(() => items.id),
+		itemNeutral: bigint('item_neutral', { mode: 'number' }).references(() => items.id),
 		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
 		role: bigint('role', { mode: 'number' }).notNull(),
 		// You can use { mode: "bigint" } if numbers are exceeding js number limitations
