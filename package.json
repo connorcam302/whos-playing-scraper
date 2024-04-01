@@ -6,7 +6,8 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"scrape:games": "ts-node ./gamescraper/scrapeGames.ts",
-		"scrape:totw": "ts-node ./towtscraper/scrapeTOTW.ts"
+		"scrape:totw": "ts-node ./otwscraper/scrapeTOTW.ts",
+		"scrape:fotw": "ts-node ./otwscraper/scrapeFOTW.ts"
 	},
 	"keywords": [],
 	"author": "",

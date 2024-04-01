@@ -9,7 +9,8 @@ const getPOTW = async (ignoredRoles: number[], ignoredPlayers: string[] = ['none
                 players.id as playerid,
                 heroes.name,
                 heroes.id as heroid,
-                match_data.role
+                match_data.role,
+                matches.id as matchid
             FROM
                 match_data
                 INNER JOIN accounts ON accounts.account_id = match_data.player_id
@@ -31,6 +32,7 @@ const getPOTW = async (ignoredRoles: number[], ignoredPlayers: string[] = ['none
 		hero: potw[0].name,
 		heroId: Number(potw[0].heroid),
 		role: Number(potw[0].role),
+		matchId: Number(potw[0].matchid),
 	}
 }
 
@@ -49,14 +51,19 @@ const scrapeTOTW = async () => {
 	const data = {
 		oneHero: totw.find(p => p.role === 1)?.heroId,
 		onePlayer: totw.find(p => p.role === 1)?.playerId,
+		oneMatch: totw.find(p => p.role === 1)?.matchId,
 		twoHero: totw.find(p => p.role === 2)?.heroId,
 		twoPlayer: totw.find(p => p.role === 2)?.playerId,
+		twoMatch: totw.find(p => p.role === 2)?.matchId,
 		threeHero: totw.find(p => p.role === 3)?.heroId,
 		threePlayer: totw.find(p => p.role === 3)?.playerId,
+		threeMatch: totw.find(p => p.role === 3)?.matchId,
 		fourHero: totw.find(p => p.role === 4)?.heroId,
 		fourPlayer: totw.find(p => p.role === 4)?.playerId,
+		fourMatch: totw.find(p => p.role === 4)?.matchId,
 		fiveHero: totw.find(p => p.role === 5)?.heroId,
 		fivePlayer: totw.find(p => p.role === 5)?.playerId,
+		fiveMatch: totw.find(p => p.role === 5)?.matchId,
 	}
 
 	//@ts-ignore
