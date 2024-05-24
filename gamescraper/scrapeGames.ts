@@ -1,5 +1,11 @@
 import 'dotenv/config'
-import { getMatchDetails, getMatchHistory, getAccountList, getMatchHistoryOpenDota } from './connector'
+import {
+	getMatchDetails,
+	getMatchHistory,
+	getAccountList,
+	getMatchHistoryOpenDota,
+	getMatchDetailsOpenDota,
+} from './connector'
 import { db } from '../db/database'
 import { matchData, matches, players } from '../db/schema'
 import { getRole } from './role'
@@ -23,13 +29,20 @@ const main = async () => {
 
 	let playerCount = accountList.length
 	for (const accountId of accountList) {
-		const matchIds = await getMatchHistoryOpenDota(accountId, Number(process.argv[2]) || 1)
+		const matchIds = await getMatchHistory(accountId, Number(process.argv[2]) || 1)
 
 		log(`Processing account: ${accountId}`)
 		let matchCount = matchIds.length
 		for (const matchId of matchIds) {
 			try {
-				const { result } = await getMatchDetails(matchId)
+				let result: any
+				if (process.argv[3] == 'opendota') {
+					const data = await getMatchDetailsOpenDota(matchId)
+					result = data
+				} else {
+					const data = await getMatchDetails(matchId)
+					result = data.result
+				}
 
 				try {
 					await db.insert(matches).values({
@@ -86,6 +99,7 @@ const main = async () => {
 						towerDamage: playerData.tower_damage,
 						role: role,
 						impact: getImpactScore(playerData, role, result.duration),
+						facet: playerData.hero_variant,
 					})
 
 					debugLog('Inserted match data: match=' + result.match_id + ' account=' + accountId)
@@ -98,6 +112,7 @@ const main = async () => {
 				}
 			} catch (e) {
 				log(`Failed to get match details: ${matchId}`)
+				debugLog(e)
 			}
 			if (process.env.ENVIRONMENT == 'dev') {
 				if (matchCount !== matchIds.length) {

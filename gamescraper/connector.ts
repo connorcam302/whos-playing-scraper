@@ -8,6 +8,11 @@ export const getMatchDetails = async (matchId: string) => {
 	return await matchDetails.data
 }
 
+export const getMatchDetailsOpenDota = async (matchId: string) => {
+	const matchDetails = await axios.get(`https://api.opendota.com/api/matches/${matchId}`)
+	return await matchDetails.data
+}
+
 export const getMatchHistory = async (accountId: number, numberOfGames: number = 1) => {
 	const matchHistory = await axios.get(
 		`https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1/?account_id=${accountId}&key=${process.env.STEAM_KEY}&matches_requested=${numberOfGames}`,
