@@ -13,12 +13,20 @@ export const getMatchDetailsOpenDota = async (matchId: string) => {
 	return await matchDetails.data
 }
 
+export const getMatchDetailsSequenceId = async (sequenceId: string) => {
+	const matchDetails = await axios.get(
+		`https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v1?start_at_match_seq_num=${sequenceId}&matches_requested=1&key=${process.env.STEAM_KEY}`,
+	)
+	return await matchDetails.data
+}
+
 export const getMatchHistory = async (accountId: number, numberOfGames: number = 1) => {
 	const matchHistory = await axios.get(
 		`https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v1/?account_id=${accountId}&key=${process.env.STEAM_KEY}&matches_requested=${numberOfGames}`,
 	)
 
-	const idList = matchHistory.data.result.matches.map((match: any) => match.match_id)
+	//const idList = matchHistory.data.result.matches.map((match: any) => match.match_id)
+	const idList = matchHistory.data.result.matches.map((match: any) => match.match_seq_num)
 
 	return await idList
 }

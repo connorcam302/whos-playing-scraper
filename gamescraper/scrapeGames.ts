@@ -5,15 +5,15 @@ import {
 	getAccountList,
 	getMatchHistoryOpenDota,
 	getMatchDetailsOpenDota,
+	getMatchDetailsSequenceId,
 } from './connector'
 import { db } from '../db/database'
 import { matchData, matches, players } from '../db/schema'
 import { getRole } from './role'
 import { getImpactScore } from './impact'
 import dayjs from 'dayjs'
-const { whyIsNodeStillRunning } = require('why-is-node-still-running')
 
-const debug = false
+const debug = true
 const debugLog = (message: any) => {
 	if (debug) {
 		console.log(message)
@@ -40,11 +40,13 @@ const main = async () => {
 					const data = await getMatchDetailsOpenDota(matchId)
 					result = data
 				} else {
-					const data = await getMatchDetails(matchId)
-					result = data.result
+					//const data = await getMatchDetails(matchId)
+					const data = await getMatchDetailsSequenceId(matchId)
+					result = data.result.matches[0]
 				}
 
 				try {
+					console.log(result.match_seq_num)
 					await db.insert(matches).values({
 						id: result.match_id,
 						gameMode: result.game_mode,
@@ -52,6 +54,7 @@ const main = async () => {
 						duration: result.duration,
 						winner: result.radiant_win ? 'radiant' : 'dire',
 						lobby: result.lobby_type,
+						sequenceNumber: result.match_seq_num,
 					})
 
 					debugLog('Inserted match: ' + result.match_id)
