@@ -46,7 +46,6 @@ const main = async () => {
 				}
 
 				try {
-					console.log(result.match_seq_num)
 					await db.insert(matches).values({
 						id: result.match_id,
 						gameMode: result.game_mode,
