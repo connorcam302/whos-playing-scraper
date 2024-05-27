@@ -13,7 +13,7 @@ import { getRole } from './role'
 import { getImpactScore } from './impact'
 import dayjs from 'dayjs'
 
-const debug = true
+const debug = false
 const debugLog = (message: any) => {
 	if (debug) {
 		console.log(message)
