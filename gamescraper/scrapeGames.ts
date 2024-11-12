@@ -13,7 +13,7 @@ import { getRole } from './role'
 import { getImpactScore } from './impact'
 import dayjs from 'dayjs'
 
-const debug = false
+const debug = true
 const debugLog = (message: any) => {
 	if (debug) {
 		console.log(message)
@@ -26,6 +26,8 @@ const log = (message: any) => {
 
 const main = async () => {
 	const accountList: number[] = await getAccountList()
+
+	console.log('Account list:', accountList)
 
 	let playerCount = accountList.length
 	for (const accountId of accountList) {

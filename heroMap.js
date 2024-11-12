@@ -625,8 +625,8 @@ heroMap.set(138, {
 	name: 'Muerta',
 	img: 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/muerta.png',
 })
-heroMap.set(139, {
-	id: 139,
+heroMap.set(145, {
+	id: 145,
 	name: 'Kez',
 	img: 'https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/kez.png',
 })
