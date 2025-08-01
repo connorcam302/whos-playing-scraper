@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  dota2-scraper:
+    build: .
+    container_name: whos-playing-scraper
+    restart: unless-stopped
+    volumes:
+      - ./logs:/var/log/cron
+    environment:
+      - NODE_ENV=production
+      - STEAM_KEY=${STEAM_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+    healthcheck:
+      test: ['CMD', 'pgrep', 'crond']
+      interval: 2m
+      timeout: 10s
+      retries: 3
+      start_period: 1m

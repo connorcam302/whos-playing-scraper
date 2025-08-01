@@ -12,29 +12,38 @@ import { matchData, matches, players } from '../db/schema'
 import { getRole } from './role'
 import { getImpactScore } from './impact'
 import dayjs from 'dayjs'
+import { debuglog } from 'util'
 
-const debug = true
+const debug = process.env.DEBUG === 'true' || false
 const debugLog = (message: any) => {
 	if (debug) {
-		console.log(message)
+		console.log(`${dayjs().format('YYYY-MM-DD HH:mm:ss')}: [DEBUG] ${message}`)
 	}
 }
 
 const log = (message: any) => {
-	console.log(`${dayjs()}: ${message}`)
+	console.log(`${dayjs().format('YYYY-MM-DD HH:mm:ss')}: ${message}`)
 }
 
 const main = async () => {
 	const accountList: number[] = await getAccountList()
-
-	console.log('Account list:', accountList)
+	debugLog('Account list: ' + JSON.stringify(accountList))
 
 	let playerCount = accountList.length
+	let totalGamesScraped = 0
+	let totalErrors = 0
+
 	for (const accountId of accountList) {
 		const matchIds = await getMatchHistory(accountId, Number(process.argv[2]) || 1)
+		if (!matchIds) {
+			continue
+		}
 
-		log(`Processing account: ${accountId}`)
+		debugLog(`Processing account: ${accountId}`)
 		let matchCount = matchIds.length
+		let accountGamesScraped = 0
+		let accountErrors = 0
+
 		for (const matchId of matchIds) {
 			try {
 				let result: any
@@ -47,6 +56,9 @@ const main = async () => {
 					result = data.result.matches[0]
 				}
 
+				let isNewMatch = false
+				let isNewMatchData = false
+
 				try {
 					await db.insert(matches).values({
 						id: result.match_id,
@@ -58,10 +70,11 @@ const main = async () => {
 						sequenceNumber: result.match_seq_num,
 					})
 
+					isNewMatch = true
 					debugLog('Inserted match: ' + result.match_id)
 				} catch (e: any) {
 					if (e.code !== '23505') {
-						debugLog(e)
+						debugLog('Error inserting match: ' + e.message)
 					} else {
 						debugLog('Match already exists: ' + result.match_id)
 					}
@@ -106,29 +119,49 @@ const main = async () => {
 						facet: playerData.hero_variant,
 					})
 
+					isNewMatchData = true
 					debugLog('Inserted match data: match=' + result.match_id + ' account=' + accountId)
 				} catch (e: any) {
 					if (e.code !== '23505') {
-						debugLog(e)
+						debugLog('Error inserting match data: ' + e.message)
 					} else {
 						debugLog('Match data already exists: match=' + result.match_id + ' account=' + accountId)
 					}
 				}
+
+				// Only log successful scraping when new data is added
+				if (isNewMatch || isNewMatchData) {
+					log(`✓ Scraped match ${result.match_id} for account ${accountId}`)
+					accountGamesScraped++
+					totalGamesScraped++
+				}
 			} catch (e) {
-				log(`Failed to get match details: ${matchId}`)
+				log(`✗ Error scraping match ${matchId}: ${e instanceof Error ? e.message : String(e)}`)
 				debugLog(e)
+				accountErrors++
+				totalErrors++
 			}
-			if (process.env.ENVIRONMENT == 'dev') {
+
+			if (debug && process.env.ENVIRONMENT == 'dev') {
 				if (matchCount !== matchIds.length) {
 					process.stdout.write('\x1B[1A\x1B[2K')
 				}
 				matchCount--
-				log(`Matches remaining: ${matchCount}`)
+				debugLog(`Matches remaining: ${matchCount}`)
 			}
 		}
-		log(`Finished processing account: ${accountId}`)
+
+		// Only log account summary if games were scraped or errors occurred
+		if (accountGamesScraped > 0 || accountErrors > 0) {
+			debugLog(`Finished account ${accountId}: ${accountGamesScraped} games scraped, ${accountErrors} errors`)
+		}
 		playerCount--
-		log(`Accounts remaining: ${playerCount}`)
+		debugLog(`Accounts remaining: ${playerCount}`)
+	}
+
+	// Only log final summary if games were scraped or errors occurred
+	if (totalGamesScraped > 0 || totalErrors > 0) {
+		log(`Scraping complete: ${totalGamesScraped} games scraped, ${totalErrors} errors`)
 	}
 }
 

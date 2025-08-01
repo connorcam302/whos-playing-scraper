@@ -5,9 +5,11 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"scrape:games": "ts-node ./gamescraper/scrapeGames.ts",
-		"scrape:totw": "ts-node ./otwscraper/scrapeTOTW.ts",
-		"scrape:fotw": "ts-node ./otwscraper/scrapeFOTW.ts"
+		"scrape:games": "bun ./gamescraper/scrapeGames.ts",
+		"scrape:totw": "bun ./otwscraper/scrapeTOTW.ts",
+		"scrape:fotw": "bun ./otwscraper/scrapeFOTW.ts",
+		"generate:archetypes": "bun ./team-of-the-year/archetypes.ts",
+		"generate:mostplayed": "bun ./team-of-the-year/mostplayed.ts"
 	},
 	"keywords": [],
 	"author": "",
@@ -18,14 +20,10 @@
 		"dotenv": "^16.3.1",
 		"drizzle-orm": "^0.29.3",
 		"postgres": "^3.4.3",
-		"puppeteer": "^21.6.1",
-		"why-is-node-still-running": "^1.0.0"
 	},
 	"devDependencies": {
 		"drizzle-kit": "^0.20.9",
 		"prettier": "3.1.1",
-		"ts-node": "^10.9.2",
-		"typescript": "^5.3.3",
-		"why-is-node-running": "^2.2.2"
+		"puppeteer": "^21.6.1",
 	}
 }
