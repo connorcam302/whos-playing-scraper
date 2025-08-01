@@ -4,18 +4,13 @@ import 'dotenv/config'
 export const getMatchDetails = async (matchId: string) => {
 	const makeRequest = async (): Promise<any> => {
 		try {
-			console.log(
-				`https://api.steampowered.com/IDOTA2Match_570/getMatchDetails/v1?match_id=${matchId}&key=${process.env.STEAM_KEY}`,
-			)
 			const matchDetails = await axios.get(
 				`https://api.steampowered.com/IDOTA2Match_570/getMatchDetails/v1?match_id=${matchId}&key=${process.env.STEAM_KEY}`,
 			)
-			console.log(matchDetails)
 			return matchDetails.data
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
@@ -34,7 +29,6 @@ export const getMatchDetailsOpenDota = async (matchId: string) => {
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
@@ -55,7 +49,6 @@ export const getMatchDetailsSequenceId = async (sequenceId: string) => {
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
@@ -81,7 +74,6 @@ export const getMatchHistory = async (accountId: number, numberOfGames: number =
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
@@ -102,7 +94,6 @@ export const getAccountList = async () => {
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
@@ -124,7 +115,6 @@ export const getMatchHistoryOpenDota = async (accountId: number, numberOfGames: 
 		} catch (error: any) {
 			// Check if it's a rate limit error
 			if (error.response?.status === 429 || error.response?.statusText === 'Too Many Requests') {
-				console.log('Rate limited, waiting 5 seconds before retry...')
 				await new Promise(resolve => setTimeout(resolve, 5000))
 				return makeRequest() // Retry recursively
 			}
