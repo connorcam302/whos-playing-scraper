@@ -17,6 +17,8 @@ RUN echo 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin' > /
 
 # Create cron job (assumes dotenv will load /app/.env)
 RUN echo '* * * * * cd /app && /usr/local/bin/bun scrape:games 1 >> /var/log/cron.log 2>&1' > /etc/cron.d/scrape-job
+RUN echo '0 22 * * 0 cd /app && /usr/local/bin/bun scrape:totw >> /var/log/cron.log 2>&1' >> /etc/cron.d/scrape-job
+RUN echo '0 22 * * 0 cd /app && /usr/local/bin/bun scrape:fotw >> /var/log/cron.log 2>&1' >> /etc/cron.d/scrape-job
 
 # Set proper permissions and install the crontab
 RUN chmod 0644 /etc/cron.d/scrape-job && \
